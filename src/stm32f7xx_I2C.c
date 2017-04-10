@@ -27,8 +27,7 @@ HAL_StatusTypeDef I2C_Init(void)
 	HAL_StatusTypeDef ERR_CODE;
 
 	g_hI2c.Instance = I2Cx;
-	//g_hI2c.pBuffPtr = g_I2c_Buffer;
-	g_hI2c.Init.AddressingMode = I2C_ADDRESSINGMODE_10BIT;
+	g_hI2c.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
 	g_hI2c.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
 	g_hI2c.Init.GeneralCallMode = I2C_GENERALCALL_ENABLE;
 	g_hI2c.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
