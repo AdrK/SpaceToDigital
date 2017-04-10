@@ -12,6 +12,7 @@
 #include "stm32f7xx.h"
 #include "stm32746g_discovery.h"
 #include "Error_Handler.h"
+#include "Leds.h"
 
 static void SystemClock_Config(void);
 
@@ -19,6 +20,14 @@ int main(void)
 {
 	HAL_Init();
 	SystemClock_Config();
+	Leds_Init();
+	while(1)
+	{
+		Led(LEDGREEN, 1);
+		HAL_Delay(50);
+		Led(LEDGREEN, 0);
+		HAL_Delay(450);
+	}
 	for(;;);
 }
 
