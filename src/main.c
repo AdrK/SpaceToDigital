@@ -1,43 +1,48 @@
 /**
   ******************************************************************************
   * @file    main.c
-  * @author  Ac6
-  * @version V1.0
-  * @date    01-December-2013
+  * @author  Adrian Kurylak
+  * @version V1.0.0
+  * @date    10-April-2017
   * @brief   Default main function.
   ******************************************************************************
 */
-
 
 #include "stm32f7xx.h"
 #include "stm32746g_discovery.h"
 #include "Error_Handler.h"
 #include "Leds.h"
 #include "stm32f7xx_UART.h"
+#include "stm32f7xx_I2C.h"
 
 extern UART_HandleTypeDef g_hUart;
+extern I2C_HandleTypeDef g_hI2c;
 
 static void SystemClock_Config(void);
 void generate_triangle_data(uint8_t *data, uint16_t size);
 
 int main(void)
 {
-	uint8_t UartTxBuffer[1024];
+	uint8_t DummyData[1024];
 
 	HAL_Init();
 	SystemClock_Config();
 	Leds_Init();
 	UART_Init();
+	I2C_Init();
 
-	generate_triangle_data(UartTxBuffer, 1024);
+	generate_triangle_data(DummyData, 1024);
 
 	while(1)
 	{
 		Led(LEDGREEN, 1);
-		HAL_UART_Transmit_DMA(&g_hUart, UartTxBuffer, 1024);
+		HAL_UART_Transmit_DMA(&g_hUart, DummyData, 1024);
+		HAL_Delay(50);
+		HAL_I2C_Master_Transmit_DMA(&g_hI2c, 0x68, DummyData, 1024);
+		//HAL_I2C_Master_Transmit_DMA(&g_hI2c, 0x77, DummyData, 1024);
 		HAL_Delay(50);
 		Led(LEDGREEN, 0);
-		HAL_Delay(450);
+		HAL_Delay(400);
 	}
 	for(;;);
 }
@@ -51,8 +56,6 @@ void generate_triangle_data(uint8_t *data, uint16_t size)
 	}
 }
 
-/** System Clock Configuration
-*/
 static void SystemClock_Config(void)
 {
 

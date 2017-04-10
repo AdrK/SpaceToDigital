@@ -1,9 +1,9 @@
 /**
   ******************************************************************************
-  * @file    stm32f7xx_it.c
-  * @author  Ac6
-  * @version V1.0
-  * @date    02-Feb-2015
+  * @file    src/stm32f7xx_it.c
+  * @author  Adrian Kurylak
+  * @version V1.0.0
+  * @date    10-April-2017
   * @brief   Default Interrupt Service Routines.
   ******************************************************************************
 */
@@ -23,6 +23,7 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 extern UART_HandleTypeDef g_hUart;
+extern I2C_HandleTypeDef g_hI2c;
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -77,4 +78,14 @@ void UART_DMA_RX_IRQHandler(void)
 void UART_DMA_TX_IRQHandler(void)
 {
   HAL_DMA_IRQHandler(g_hUart.hdmatx);
+}
+
+void I2C_DMA_RX_IRQHandler(void)
+{
+  HAL_DMA_IRQHandler(g_hI2c.hdmarx);
+}
+
+void I2C_DMA_TX_IRQHandler(void)
+{
+  HAL_DMA_IRQHandler(g_hI2c.hdmatx);
 }

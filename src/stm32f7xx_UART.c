@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    Leds/Leds.h
+  * @file    src/stm32f7xx_UART.c
   * @author  Adrian Kurylak
   * @version V1.0.0
   * @date    10-April-2017

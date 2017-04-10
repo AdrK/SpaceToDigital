@@ -1,3 +1,12 @@
+/**
+  ******************************************************************************
+  * @file    inc/stm32f7xx_UART.h
+  * @author  Adrian Kurylak
+  * @version V1.0.0
+  * @date    10-April-2017
+  * @brief   HAL MSP module header for UART
+  */
+
 #include "stm32f7xx_hal_uart.h"
 
 #ifndef STM32F7XX_UART_H_
@@ -25,13 +34,15 @@
 /* Definitions for DMA streams */
 #define UART_DMA_CLK_ENABLE						__HAL_RCC_DMA1_CLK_ENABLE
 #define UART_DMA_CLK_DISABLE					__HAL_RCC_DMA1_CLK_DISABLE
+
 #define UART_RX_DMA_STREAM						DMA1_Stream3
-#define UART_DMA_RX_IRQn						DMA1_Stream3_IRQn
-#define UART_TX_DMA_STREAM						DMA1_Stream1
-#define UART_DMA_TX_IRQn						DMA1_Stream1_IRQn
 #define UART_RX_DMA_CHANNEL						DMA_CHANNEL_5
-#define UART_TX_DMA_CHANNEL						DMA_CHANNEL_5
+#define UART_DMA_RX_IRQn						DMA1_Stream3_IRQn
 #define UART_DMA_RX_IRQHandler					DMA1_Stream3_IRQHandler
+
+#define UART_TX_DMA_STREAM						DMA1_Stream1
+#define UART_TX_DMA_CHANNEL						DMA_CHANNEL_5
+#define UART_DMA_TX_IRQn						DMA1_Stream1_IRQn
 #define UART_DMA_TX_IRQHandler					DMA1_Stream1_IRQHandler
 
 /* Exported functions */
