@@ -13,17 +13,28 @@
 #include "stm32746g_discovery.h"
 #include "Error_Handler.h"
 #include "Leds.h"
+#include "stm32f7xx_UART.h"
+
+extern UART_HandleTypeDef g_hUart;
 
 static void SystemClock_Config(void);
+void generate_triangle_data(uint8_t *data, uint16_t size);
 
 int main(void)
 {
+	uint8_t UartTxBuffer[1024];
+
 	HAL_Init();
 	SystemClock_Config();
 	Leds_Init();
+	UART_Init();
+
+	generate_triangle_data(UartTxBuffer, 1024);
+
 	while(1)
 	{
 		Led(LEDGREEN, 1);
+		HAL_UART_Transmit_DMA(&g_hUart, UartTxBuffer, 1024);
 		HAL_Delay(50);
 		Led(LEDGREEN, 0);
 		HAL_Delay(450);
@@ -31,6 +42,14 @@ int main(void)
 	for(;;);
 }
 
+void generate_triangle_data(uint8_t *data, uint16_t size)
+{
+	int i=0;
+	for (i = 0; i <= size; i++)
+	{
+			data[i]=i%255;
+	}
+}
 
 /** System Clock Configuration
 */
