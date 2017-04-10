@@ -11,6 +11,7 @@
 
 #include "stm32f7xx.h"
 #include "stm32746g_discovery.h"
+#include "Error_Handler.h"
 
 static void SystemClock_Config(void);
 
@@ -50,7 +51,7 @@ static void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLQ = 2;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
-    Error_Handler();
+    Error_Handler(ERROR_SYSTEM_INIT);
   }
 
     /**Initializes the CPU, AHB and APB busses clocks
@@ -64,14 +65,14 @@ static void SystemClock_Config(void)
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
   {
-    Error_Handler();
+    Error_Handler(ERROR_SYSTEM_INIT);
   }
 
   PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_I2C1;
   PeriphClkInitStruct.I2c1ClockSelection = RCC_I2C1CLKSOURCE_PCLK1;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
   {
-    Error_Handler();
+    Error_Handler(ERROR_SYSTEM_INIT);
   }
 
     /**Configure the Systick interrupt time
