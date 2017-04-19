@@ -45,6 +45,9 @@
 #define UART_DMA_TX_IRQn						DMA1_Stream1_IRQn
 #define UART_DMA_TX_IRQHandler					DMA1_Stream1_IRQHandler
 
+/* Exported members */
+extern UART_HandleTypeDef g_hUart;
+
 /* Exported functions */
 HAL_StatusTypeDef UART_Init(void);
 

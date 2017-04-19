@@ -16,17 +16,14 @@
 #endif
 #include "stm32f7xx_it.h"
 #include "Error_Handler.h"
+#include "stm32f7xx_I2C.h"
 #include "stm32f7xx_UART.h"
+#include "stm32f7xx_SPI.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-extern UART_HandleTypeDef g_hUart;
-extern DMA_HandleTypeDef g_I2cTxDma;
-extern DMA_HandleTypeDef g_I2cRxDma;
-extern I2C_HandleTypeDef g_hI2c;
-
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -90,4 +87,19 @@ void I2C_DMA_RX_IRQHandler(void)
 void I2C_DMA_TX_IRQHandler(void)
 {
   HAL_DMA_IRQHandler(&g_I2cTxDma);
+}
+
+void SPIx_IRQHandler(void)
+{
+  HAL_SPI_IRQHandler(&g_hSpi);
+}
+
+void SPIx_DMA_RX_IRQHandler(void)
+{
+  HAL_DMA_IRQHandler(g_hSpi.hdmarx);
+}
+
+void SPIx_DMA_TX_IRQHandler(void)
+{
+  HAL_DMA_IRQHandler(g_hSpi.hdmatx);
 }
