@@ -14,7 +14,7 @@
 /* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef g_hI2c;
 uint8_t g_I2c_Buffer[1024];
-DMA_HandleTypeDef g_I2cTxDma, g_I2ctRxDma;
+DMA_HandleTypeDef g_I2cTxDma, g_I2cRxDma;
 
 /* Private function prototypes -----------------------------------------------*/
 HAL_StatusTypeDef I2C_Init(void);
@@ -34,7 +34,7 @@ HAL_StatusTypeDef I2C_Init(void)
 	g_hI2c.Init.OwnAddress1 = 0;
 	g_hI2c.Init.OwnAddress2 = 0;
 	g_hI2c.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
-	g_hI2c.Init.Timing = 0x00A0A3F7;
+	g_hI2c.Init.Timing = ((uint32_t)0x40912732);
 
 	ERR_CODE = HAL_I2C_Init(&g_hI2c);
 
@@ -43,20 +43,16 @@ HAL_StatusTypeDef I2C_Init(void)
 
 void HAL_I2C_MspInit(I2C_HandleTypeDef *hI2c)
 {
+	GPIO_InitTypeDef GPIO_InitStructure;
 	if( hI2c->Instance == I2Cx )
 	{
-		// Locals
-		GPIO_InitTypeDef GPIO_InitStructure;
-
-		/*##-1- Enable peripherals and GPIO Clocks #################################*/
+		/*## Enable peripherals and GPIO Clocks #################################*/
 		/* Enable GPIO TX/RX clock */
 		I2C_GPIO_CLK_ENABLE();
-		/* Enable I2C clock */
-		I2C_RCC_CLK_ENABLE();
 		/* Enable DMA clock */
 		I2C_DMA_CLK_ENABLE();
 
-		/*##-2- Configure peripheral GPIO ##########################################*/
+		/*## Configure peripheral GPIO ##########################################*/
 		GPIO_InitStructure.Mode = GPIO_MODE_AF_PP;
 		GPIO_InitStructure.Pull = GPIO_PULLUP;
 		GPIO_InitStructure.Speed = GPIO_SPEED_HIGH;
@@ -70,27 +66,24 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hI2c)
 		GPIO_InitStructure.Pin = I2C_SDA_PIN;
 		HAL_GPIO_Init(I2C_SDA_PORT, &GPIO_InitStructure);
 
-		/*##-3- Configure the DMA ##################################################*/
+		/*## Configure the DMA ##################################################*/
 		// Prepare DMA for Rx struct
-		g_I2ctRxDma.Instance = I2C_DMA_RX_STREAM;
-		g_I2ctRxDma.Init.Channel = I2C_DMA_RX_CHANNEL;
-		g_I2ctRxDma.Init.Direction = DMA_PERIPH_TO_MEMORY;
-		g_I2ctRxDma.Init.PeriphInc = DMA_PINC_DISABLE;
-		g_I2ctRxDma.Init.MemInc = DMA_MINC_ENABLE;
-		g_I2ctRxDma.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
-		g_I2ctRxDma.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-		g_I2ctRxDma.Init.Mode = DMA_NORMAL;
-		g_I2ctRxDma.Init.Priority = DMA_PRIORITY_LOW;
-		g_I2ctRxDma.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
-		g_I2ctRxDma.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;
-		g_I2ctRxDma.Init.MemBurst = DMA_MBURST_SINGLE;
-		g_I2ctRxDma.Init.PeriphBurst = DMA_PBURST_SINGLE;
+		g_I2cRxDma.Instance = I2C_DMA_RX_STREAM;
+		g_I2cRxDma.Init.Channel = I2C_DMA_RX_CHANNEL;
+		g_I2cRxDma.Init.Direction = DMA_PERIPH_TO_MEMORY;
+		g_I2cRxDma.Init.PeriphInc = DMA_PINC_DISABLE;
+		g_I2cRxDma.Init.MemInc = DMA_MINC_ENABLE;
+		g_I2cRxDma.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+		g_I2cRxDma.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+		g_I2cRxDma.Init.Mode = DMA_NORMAL;
+		g_I2cRxDma.Init.Priority = DMA_PRIORITY_LOW;
+		g_I2cRxDma.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
 
 		/* Initialize DMA */
-		HAL_DMA_Init(&g_I2ctRxDma);
+		HAL_DMA_Init(&g_I2cRxDma);
 
 		/* Associate the initialized DMA handle to the the I2C handle */
-		__HAL_LINKDMA(hI2c, hdmarx, g_I2ctRxDma);
+		__HAL_LINKDMA(hI2c, hdmarx, g_I2cRxDma);
 
 		/* Configure the DMA handler for Transmission process */
 		g_I2cTxDma.Instance = I2C_DMA_TX_STREAM;
@@ -103,9 +96,6 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hI2c)
 		g_I2cTxDma.Init.Mode = DMA_NORMAL;
 		g_I2cTxDma.Init.Priority = DMA_PRIORITY_LOW;
 		g_I2cTxDma.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
-		g_I2cTxDma.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;
-		g_I2cTxDma.Init.MemBurst = DMA_MBURST_SINGLE;
-		g_I2cTxDma.Init.PeriphBurst = DMA_MBURST_SINGLE;
 
 		/* Initialize DMA */
 		HAL_DMA_Init(&g_I2cTxDma);
@@ -113,18 +103,21 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hI2c)
 		/* Associate the initialized DMA handle to the the I2C handle */
 		__HAL_LINKDMA(hI2c, hdmatx, g_I2cTxDma);
 
-		/*##-4- Configure the NVIC for DMA #########################################*/
+		/* Enable I2C clock */
+		I2C_RCC_CLK_ENABLE();
+
+		/*## Configure the NVIC for DMA #########################################*/
 		/* NVIC configuration for RX DMA transfer complete interrupt */
-		HAL_NVIC_SetPriority(I2C_DMA_RX_IRQn, 1, 0);
+		HAL_NVIC_SetPriority(I2C_DMA_RX_IRQn, 0, 0);
 		HAL_NVIC_EnableIRQ(I2C_DMA_RX_IRQn);
 
 		/* NVIC configuration for TX DMA transfer complete interrupt */
-		HAL_NVIC_SetPriority(I2C_DMA_TX_IRQn, 1, 0);
+		HAL_NVIC_SetPriority(I2C_DMA_TX_IRQn, 0, 0);
 		HAL_NVIC_EnableIRQ(I2C_DMA_TX_IRQn);
 
-	    /*##-5- Reset peripheral ##################################################*/
-	    I2C_RCC_FORCE_RESET();
-	    I2C_RCC_RELEASE_RESET();
+	    /* Enable and set I2Cx Interrupt to a lower priority */
+	    HAL_NVIC_SetPriority(I2C1_EV_IRQn, 0x0F, 0);
+	    HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
 
 	}
 }

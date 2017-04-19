@@ -23,6 +23,8 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 extern UART_HandleTypeDef g_hUart;
+extern DMA_HandleTypeDef g_I2cTxDma;
+extern DMA_HandleTypeDef g_I2cRxDma;
 extern I2C_HandleTypeDef g_hI2c;
 
 /* Private function prototypes -----------------------------------------------*/
@@ -82,10 +84,10 @@ void UART_DMA_TX_IRQHandler(void)
 
 void I2C_DMA_RX_IRQHandler(void)
 {
-  HAL_DMA_IRQHandler(g_hI2c.hdmarx);
+  HAL_DMA_IRQHandler(&g_I2cRxDma);
 }
 
 void I2C_DMA_TX_IRQHandler(void)
 {
-  HAL_DMA_IRQHandler(g_hI2c.hdmatx);
+  HAL_DMA_IRQHandler(&g_I2cTxDma);
 }

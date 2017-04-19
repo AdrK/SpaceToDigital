@@ -31,10 +31,10 @@
 #define I2C_DMA_CLK_ENABLE						__HAL_RCC_DMA1_CLK_ENABLE
 #define I2C_DMA_CLK_DISABLE						__HAL_RCC_DMA1_CLK_DISABLE
 
-#define I2C_DMA_RX_STREAM						DMA1_Stream0
+#define I2C_DMA_RX_STREAM						DMA1_Stream5
 #define I2C_DMA_RX_CHANNEL						DMA_CHANNEL_1
-#define I2C_DMA_RX_IRQn							DMA1_Stream0_IRQn
-#define I2C_DMA_RX_IRQHandler					DMA1_Stream0_IRQHandler
+#define I2C_DMA_RX_IRQn							DMA1_Stream5_IRQn
+#define I2C_DMA_RX_IRQHandler					DMA1_Stream5_IRQHandler
 
 #define I2C_DMA_TX_STREAM						DMA1_Stream6
 #define I2C_DMA_TX_CHANNEL						DMA_CHANNEL_1

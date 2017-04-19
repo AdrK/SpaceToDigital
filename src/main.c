@@ -38,8 +38,7 @@ int main(void)
 		Led(LEDGREEN, 1);
 		HAL_UART_Transmit_DMA(&g_hUart, DummyData, 1024);
 		HAL_Delay(50);
-		HAL_I2C_Master_Transmit_DMA(&g_hI2c, 0x77, DummyData, 1024);
-		//HAL_I2C_Master_Transmit_DMA(&g_hI2c, 0x77, DummyData, 1024);
+		HAL_I2C_Master_Transmit_DMA(&g_hI2c, 0b11010000, DummyData, 1024);
 		HAL_Delay(50);
 		Led(LEDGREEN, 0);
 		HAL_Delay(400);
