@@ -12,14 +12,14 @@
 #include "stm32746g_discovery.h"
 #include "Error_Handler.h"
 #include "Leds.h"
-#include "stm32f7xx_UART.h"
+#include "stm32f7xx_USART.h"
 #include "stm32f7xx_I2C.h"
+#include "stm32f7xx_SPI.h"
 
-extern UART_HandleTypeDef g_hUart;
-extern I2C_HandleTypeDef g_hI2c;
 
 static void SystemClock_Config(void);
 void generate_triangle_data(uint8_t *data, uint16_t size);
+
 
 int main(void)
 {
@@ -28,20 +28,21 @@ int main(void)
 	HAL_Init();
 	SystemClock_Config();
 	Leds_Init();
-	UART_Init();
+	USART_Init();
 	I2C_Init();
+	SPI_Init();
 
 	generate_triangle_data(DummyData, 1024);
 
 	while(1)
 	{
 		Led(LEDGREEN, 1);
-		HAL_UART_Transmit_DMA(&g_hUart, DummyData, 1024);
+		HAL_USART_Transmit_DMA(&g_hUsart, DummyData, 1024);
 		HAL_Delay(50);
-		HAL_I2C_Master_Transmit_DMA(&g_hI2c, 0b11010000, DummyData, 1024);
-		HAL_Delay(50);
+		HAL_SPI_Transmit_DMA(&g_hSpi, DummyData, 1024);
+		HAL_Delay(100);
 		Led(LEDGREEN, 0);
-		HAL_Delay(400);
+		HAL_Delay(350);
 	}
 	for(;;);
 }

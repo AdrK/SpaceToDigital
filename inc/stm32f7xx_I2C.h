@@ -41,7 +41,7 @@
 #define I2C_DMA_TX_IRQn							DMA1_Stream6_IRQn
 #define I2C_DMA_TX_IRQHandler					DMA1_Stream6_IRQHandler
 
-/* Exported members */
+/* Exported handlers */
 extern I2C_HandleTypeDef g_hI2c;
 extern DMA_HandleTypeDef g_I2cTxDma, g_I2cRxDma;
 

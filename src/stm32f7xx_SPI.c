@@ -21,34 +21,29 @@
 /* Channel 0 : Stream 4 */
 /************************/
 
-#include "stm32f7xx_SPI.h"
 #include "stm32f7xx_hal.h"
+#include "stm32f7xx_SPI.h"
 #include <stdlib.h>
 SPI_HandleTypeDef g_hSpi;
 DMA_HandleTypeDef g_hSpiTxDma, g_hSpiRxDma;
-uint8_t g_aTxBuffer[20]="DUMMY";
 
-HAL_StatusTypeDef Init_spi(void);
 void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi);
 void HAL_SPI_MspDeInit(SPI_HandleTypeDef *hspi);
 void SPI_NSS_Init(void);
 void SPI_NSS_DeInit(void);
 
-HAL_StatusTypeDef Init_spi()
+HAL_StatusTypeDef SPI_Init()
 {
-	HAL_StatusTypeDef ERR_CODE;
-	// Locals
-
 	// Prepare SPI2 struct
 	g_hSpi.Instance = SPIx;
 	g_hSpi.Init.Mode = SPI_MODE_MASTER;
 	g_hSpi.Init.Direction = SPI_DIRECTION_2LINES;
-	g_hSpi.Init.DataSize = SPI_DATASIZE_16BIT;
+	g_hSpi.Init.DataSize = SPI_DATASIZE_8BIT;
 	g_hSpi.Init.CLKPolarity = SPI_POLARITY_HIGH;
 	g_hSpi.Init.CLKPhase = SPI_PHASE_1EDGE;
 	g_hSpi.Init.NSS = SPI_NSS_HARD_OUTPUT;
 	g_hSpi.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
-	g_hSpi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+	g_hSpi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
 	g_hSpi.Init.FirstBit = SPI_FIRSTBIT_MSB;
 	g_hSpi.Init.TIMode = SPI_TIMODE_DISABLE;
 	g_hSpi.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -57,11 +52,7 @@ HAL_StatusTypeDef Init_spi()
 	SPI_NSS_Init();
 
 	// Initialize SPI2
-	HAL_SPI_Init(&g_hSpi);
-	if ( ERR_CODE != HAL_OK)
-		return ERR_CODE;
-
-	return HAL_OK;
+	return HAL_SPI_Init(&g_hSpi);
 }
 
 void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)

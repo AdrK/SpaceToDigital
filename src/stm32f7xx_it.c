@@ -17,7 +17,7 @@
 #include "stm32f7xx_it.h"
 #include "Error_Handler.h"
 #include "stm32f7xx_I2C.h"
-#include "stm32f7xx_UART.h"
+#include <stm32f7xx_USART.h>
 #include "stm32f7xx_SPI.h"
 
 /* Private typedef -----------------------------------------------------------*/
@@ -64,29 +64,29 @@ void SysTick_Handler(void)
 /*  available peripheral interrupt handler's name please refer to the startup */
 /*  file (startup_stm32f7xx.s).                                               */
 /******************************************************************************/
-void UART_IRQHandler(void)
+void USART_IRQHandler(void)
 {
-  HAL_UART_IRQHandler(&g_hUart);
+  HAL_USART_IRQHandler(&g_hUsart);
 }
 
-void UART_DMA_RX_IRQHandler(void)
+void USART_DMA_RX_IRQHandler(void)
 {
-  HAL_DMA_IRQHandler(g_hUart.hdmarx);
+  HAL_DMA_IRQHandler(g_hUsart.hdmarx);
 }
 
-void UART_DMA_TX_IRQHandler(void)
+void USART_DMA_TX_IRQHandler(void)
 {
-  HAL_DMA_IRQHandler(g_hUart.hdmatx);
+  HAL_DMA_IRQHandler(g_hUsart.hdmatx);
 }
 
 void I2C_DMA_RX_IRQHandler(void)
 {
-  HAL_DMA_IRQHandler(&g_I2cRxDma);
+  HAL_DMA_IRQHandler(g_hI2c.hdmarx);
 }
 
 void I2C_DMA_TX_IRQHandler(void)
 {
-  HAL_DMA_IRQHandler(&g_I2cTxDma);
+  HAL_DMA_IRQHandler(g_hI2c.hdmatx);
 }
 
 void SPIx_IRQHandler(void)
