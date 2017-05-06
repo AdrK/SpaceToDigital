@@ -43,7 +43,7 @@ HAL_StatusTypeDef SPI_Init()
 	g_hSpi.Init.CLKPhase = SPI_PHASE_1EDGE;
 	g_hSpi.Init.NSS = SPI_NSS_HARD_OUTPUT;
 	g_hSpi.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
-	g_hSpi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
+	g_hSpi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
 	g_hSpi.Init.FirstBit = SPI_FIRSTBIT_MSB;
 	g_hSpi.Init.TIMode = SPI_TIMODE_DISABLE;
 	g_hSpi.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -102,7 +102,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
 		g_hSpiTxDma.Init.PeriphInc = DMA_PINC_DISABLE;
 		g_hSpiTxDma.Init.MemInc = DMA_MINC_ENABLE;
 		g_hSpiTxDma.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
-		g_hSpiTxDma.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
+		g_hSpiTxDma.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
 		g_hSpiTxDma.Init.Mode = DMA_NORMAL;
 		g_hSpiTxDma.Init.Priority = DMA_PRIORITY_LOW;
 		g_hSpiTxDma.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
