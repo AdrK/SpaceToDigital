@@ -8,28 +8,29 @@
   ******************************************************************************
 */
 
-#include "stm32f7xx.h"
 #include "stm32746g_discovery.h"
+#include "stm32f7xx.h"
 #include "Error_Handler.h"
 #include "Leds.h"
 #include "stm32f7xx_USART.h"
-#include "stm32f7xx_I2C.h"
 #include "stm32f7xx_SPI.h"
-
+#include "mpu9250.h"
 
 static void SystemClock_Config(void);
 void generate_triangle_data(uint8_t *data, uint16_t size);
 
-
 int main(void)
 {
 	uint8_t DummyData[1024];
+	uint8_t start[]="start\n";
+	uint8_t stop[]="stop\n";
+	uint16_t data16;
+	uint8_t data8;
 
 	HAL_Init();
 	SystemClock_Config();
 	Leds_Init();
 	USART_Init();
-	I2C_Init();
 	SPI_Init();
 
 	generate_triangle_data(DummyData, 1024);
@@ -37,12 +38,37 @@ int main(void)
 	while(1)
 	{
 		Led(LEDGREEN, 1);
-		HAL_USART_Transmit_DMA(&g_hUsart, DummyData, 1024);
-		HAL_Delay(50);
-		HAL_SPI_Transmit_DMA(&g_hSpi, DummyData, 1024);
-		HAL_Delay(100);
+		HAL_Delay(10);
 		Led(LEDGREEN, 0);
-		HAL_Delay(350);
+		HAL_USART_Transmit_DMA(&g_hUsart,start,sizeof(start)-1);
+		HAL_Delay(100);
+
+		data16 = mpu_get_accel_x();
+		HAL_USART_Transmit_DMA(&g_hUsart,(uint8_t*)&data16 , 2);
+		HAL_Delay(10);
+
+		data8 = '\n';
+		HAL_USART_Transmit_DMA(&g_hUsart,(uint8_t*)&data8 , 1);
+		HAL_Delay(10);
+
+		data16 = mpu_get_accel_y();
+		HAL_USART_Transmit_DMA(&g_hUsart, (uint8_t*)&data16, 2);
+		HAL_Delay(10);
+
+		data8 = '\n';
+		HAL_USART_Transmit_DMA(&g_hUsart,(uint8_t*)&data8 , 1);
+		HAL_Delay(10);
+
+		data16 = mpu_get_accel_z();
+		HAL_USART_Transmit_DMA(&g_hUsart, (uint8_t*)&data16, 2);
+		HAL_Delay(10);
+
+		data8 = '\n';
+		HAL_USART_Transmit_DMA(&g_hUsart,(uint8_t*)&data8, 1);
+		HAL_Delay(10);
+
+		HAL_USART_Transmit_DMA(&g_hUsart,stop,sizeof(stop)-1);
+		HAL_Delay(1000);
 	}
 	for(;;);
 }
